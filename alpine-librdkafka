@@ -1,0 +1,12 @@
+FROM alpine:3.19
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+  && apk update \
+  && apk add --no-cache --update librdkafka librdkafka-dev ca-certificates tini tzdata \
+  && rm -rf /var/cache/apk/* \
+  && addgroup -g 1000 appuser \
+  && adduser -u 1000 -G appuser -s /bin/sh -D appuser \
+  && mkdir /app \
+  && chown -R appuser:appuser /app/
+WORKDIR /app
+USER appuser
+#ENTRYPOINT ["/sbin/tini","--", "app"]
